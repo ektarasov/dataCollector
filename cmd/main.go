@@ -21,4 +21,11 @@ func main() {
 		fmt.Println(mmsMap[i])
 	}
 
+	var voiceMap []pkg.VoiceCallData
+	voiceMap = pkg.VoiceCollect()
+	fmt.Println("Voice данные")
+	for i := 0; i < len(voiceMap); i++ {
+		fmt.Println(voiceMap[i])
+	}
+
 }

@@ -44,7 +44,7 @@ func SmsCollect() []SmsData {
 		str[2] = row[1]
 		str[3] = row[2]
 
-		corr := CheckForCorrupt(str)
+		corr := CheckSmsMmsForCorrupt(str)
 
 		if corr == true {
 			continue

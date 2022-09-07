@@ -45,7 +45,7 @@ func MmsCollect() []MMSData {
 			str[2] = mmsTemp[i].Bandwidth
 			str[3] = mmsTemp[i].ResponseTime
 
-			corr := CheckForCorrupt(str)
+			corr := CheckSmsMmsForCorrupt(str)
 
 			if corr != false {
 				mmsTemp = append(mmsTemp[:i], mmsTemp[i+1:]...)
