@@ -4,19 +4,19 @@ import (
 	"strconv"
 )
 
-func GetCountriesList() []string {
+func getCountriesList() []string {
 	return []string{"RU", "US", "GB", "FR", "BL", "AT", "BG", "DK", "CA", "ES", "CH", "TR", "PE", "NZ", "MC"}
 }
 
-func GetProvidersList() []string {
+func getProvidersList() []string {
 	return []string{"Topolo", "Rond", "Kildy"}
 }
 
-func GetVoiceProvidersList() []string {
+func getVoiceProvidersList() []string {
 	return []string{"TransparentCalls", "E-Voice", "JustPhone"}
 }
 
-func GetEmailProvidersList() []string {
+func getEmailProvidersList() []string {
 	return []string{
 		"Gmail",
 		"Yahoo",
@@ -42,13 +42,13 @@ func CheckSmsMmsForCorrupt(s [4]string) bool {
 		return corr
 	}
 
-	countriesList := GetCountriesList()
+	countriesList := getCountriesList()
 	corr = cycleCheck(s[0], countriesList)
 	if corr == true {
 		return corr
 	}
 
-	providersList := GetProvidersList()
+	providersList := getProvidersList()
 	corr = cycleCheck(s[1], providersList)
 	if corr == true {
 		return corr
@@ -75,13 +75,13 @@ func CheckVoiceForCorrupt(s []string) bool {
 		return corr
 	}
 
-	countriesList := GetCountriesList()
+	countriesList := getCountriesList()
 	corr = cycleCheck(s[0], countriesList)
 	if corr == true {
 		return corr
 	}
 
-	providersList := GetVoiceProvidersList()
+	providersList := getVoiceProvidersList()
 	corr = cycleCheck(s[3], providersList)
 	if corr == true {
 		return corr
@@ -138,14 +138,14 @@ func cycleCheck(s string, l []string) bool {
 func CheckEmailForCorrupt(s []string) bool {
 	corr := false
 
-	countriesList := GetCountriesList()
+	countriesList := getCountriesList()
 
 	corr = cycleCheck(s[0], countriesList)
 	if corr == true {
 		return corr
 	}
 
-	emailList := GetEmailProvidersList()
+	emailList := getEmailProvidersList()
 	corr = cycleCheck(s[1], emailList)
 	if corr == true {
 		return corr

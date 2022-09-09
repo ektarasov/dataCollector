@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"encoding/csv"
+	"io"
 	"log"
 	"os"
 	"os/user"
@@ -29,15 +30,19 @@ func SmsCollect() []SmsData {
 	defer file.Close()
 	reader := csv.NewReader(file)
 	reader.Comma = ';'
-	rows, err := reader.ReadAll()
-	if err != nil {
-		log.Println("Cannot read CSV file:", err)
-	}
-
 	var smsTemp []SmsData
-
-	for _, row := range rows {
-
+	for {
+		row, err := reader.Read()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			//	log.Println("Cannot read line:", err)
+			continue
+		}
+		if len(row) != 4 {
+			continue
+		}
 		var str [4]string
 		str[0] = row[0]
 		str[1] = row[3]
@@ -45,7 +50,6 @@ func SmsCollect() []SmsData {
 		str[3] = row[2]
 
 		corr := CheckSmsMmsForCorrupt(str)
-
 		if corr == true {
 			continue
 		}
