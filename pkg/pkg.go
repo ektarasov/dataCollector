@@ -12,50 +12,6 @@ func GetProvidersList() []string {
 	return []string{"Topolo", "Rond", "Kildy"}
 }
 
-func CheckSmsMmsForCorrupt(s [4]string) bool {
-	corr := false
-
-	if s[0] == "" || s[1] == "" || s[2] == "" || s[3] == "" {
-		corr = true
-		return corr
-	}
-
-	countriesList := GetCountriesList()
-
-	for i := 0; i < len(countriesList); i++ {
-		if countriesList[i] == s[0] {
-			break
-		} else if i == len(countriesList)-1 {
-			corr = true
-			return corr
-		}
-	}
-
-	providersList := GetProvidersList()
-
-	for i := 0; i < len(providersList); i++ {
-		if providersList[i] == s[1] {
-			break
-		} else if i == len(providersList)-1 {
-			corr = true
-			return corr
-		}
-	}
-
-	bandInt, err := strconv.Atoi(s[2])
-	if err != nil || (bandInt < 0 || bandInt > 100) {
-		corr = true
-		return corr
-	}
-	responseInt, err := strconv.Atoi(s[3])
-	if err != nil || responseInt < 0 {
-		corr = true
-		return corr
-	}
-
-	return corr
-}
-
 func GetVoiceProvidersList() []string {
 	return []string{"TransparentCalls", "E-Voice", "JustPhone"}
 }
@@ -78,6 +34,40 @@ func GetEmailProvidersList() []string {
 	}
 }
 
+func CheckSmsMmsForCorrupt(s [4]string) bool {
+	corr := false
+
+	if s[0] == "" || s[1] == "" || s[2] == "" || s[3] == "" {
+		corr = true
+		return corr
+	}
+
+	countriesList := GetCountriesList()
+	corr = cycleCheck(s[0], countriesList)
+	if corr == true {
+		return corr
+	}
+
+	providersList := GetProvidersList()
+	corr = cycleCheck(s[1], providersList)
+	if corr == true {
+		return corr
+	}
+
+	bandInt, err := strconv.Atoi(s[2])
+	if err != nil || (bandInt < 0 || bandInt > 100) {
+		corr = true
+		return corr
+	}
+	responseInt, err := strconv.Atoi(s[3])
+	if err != nil || responseInt < 0 {
+		corr = true
+		return corr
+	}
+
+	return corr
+}
+
 func CheckVoiceForCorrupt(s []string) bool {
 	corr := false
 
@@ -86,25 +76,15 @@ func CheckVoiceForCorrupt(s []string) bool {
 	}
 
 	countriesList := GetCountriesList()
-
-	for i := 0; i < len(countriesList); i++ {
-		if countriesList[i] == s[0] {
-			break
-		} else if i == len(countriesList)-1 {
-			corr = true
-			return corr
-		}
+	corr = cycleCheck(s[0], countriesList)
+	if corr == true {
+		return corr
 	}
 
 	providersList := GetVoiceProvidersList()
-
-	for i := 0; i < len(providersList); i++ {
-		if providersList[i] == s[3] {
-			break
-		} else if i == len(providersList)-1 {
-			corr = true
-			return corr
-		}
+	corr = cycleCheck(s[3], providersList)
+	if corr == true {
+		return corr
 	}
 
 	bandInt, err := strconv.Atoi(s[1])
@@ -141,29 +121,34 @@ func CheckVoiceForCorrupt(s []string) bool {
 	return corr
 }
 
-func CheckEmailForCorrupt(s []string) bool {
+func cycleCheck(s string, l []string) bool {
 	corr := false
 
-	countryList := GetCountriesList()
-
-	for i := 0; i < len(countryList); i++ {
-		if s[0] == countryList[i] {
+	for i := 0; i < len(l); i++ {
+		if s == l[i] {
 			break
-		} else if i == len(countryList)-1 {
+		} else if i == len(l)-1 {
 			corr = true
 			return corr
 		}
 	}
+	return corr
+}
+
+func CheckEmailForCorrupt(s []string) bool {
+	corr := false
+
+	countriesList := GetCountriesList()
+
+	corr = cycleCheck(s[0], countriesList)
+	if corr == true {
+		return corr
+	}
 
 	emailList := GetEmailProvidersList()
-
-	for i := 0; i < len(emailList); i++ {
-		if s[1] == emailList[i] {
-			break
-		} else if i == len(emailList)-1 {
-			corr = true
-			return corr
-		}
+	corr = cycleCheck(s[1], emailList)
+	if corr == true {
+		return corr
 	}
 
 	deliveryTime, err := strconv.Atoi(s[2])

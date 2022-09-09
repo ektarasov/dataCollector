@@ -34,6 +34,5 @@ func main() {
 	for i := 0; i < len(emailMap); i++ {
 		fmt.Println(emailMap[i])
 	}
-	fmt.Println("END")
 
 }
