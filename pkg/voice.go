@@ -43,7 +43,7 @@ func VoiceCollect() []VoiceCallData {
 			if err == io.EOF {
 				break
 			}
-			log.Println("Cannot read line:", err)
+			//	log.Println("Cannot read line:", err)
 			continue
 		}
 		if len(row) != 8 {

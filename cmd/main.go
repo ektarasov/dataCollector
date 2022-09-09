@@ -28,4 +28,12 @@ func main() {
 		fmt.Println(voiceMap[i])
 	}
 
+	var emailMap []pkg.EmailData
+	emailMap = pkg.EmailCollect()
+	fmt.Println("email Данные")
+	for i := 0; i < len(emailMap); i++ {
+		fmt.Println(emailMap[i])
+	}
+	fmt.Println("END")
+
 }

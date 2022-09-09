@@ -60,6 +60,24 @@ func GetVoiceProvidersList() []string {
 	return []string{"TransparentCalls", "E-Voice", "JustPhone"}
 }
 
+func GetEmailProvidersList() []string {
+	return []string{
+		"Gmail",
+		"Yahoo",
+		"Hotmail",
+		"MSN",
+		"Orange",
+		"Comcast",
+		"AOL",
+		"Live",
+		"RediffMail",
+		"GMX",
+		"Protonmail",
+		"Yandex",
+		"Mail.ru",
+	}
+}
+
 func CheckVoiceForCorrupt(s []string) bool {
 	corr := false
 
@@ -116,6 +134,40 @@ func CheckVoiceForCorrupt(s []string) bool {
 	}
 	medianOfCallsTime, err := strconv.Atoi(s[7])
 	if err != nil || medianOfCallsTime < 0 {
+		corr = true
+		return corr
+	}
+
+	return corr
+}
+
+func CheckEmailForCorrupt(s []string) bool {
+	corr := false
+
+	countryList := GetCountriesList()
+
+	for i := 0; i < len(countryList); i++ {
+		if s[0] == countryList[i] {
+			break
+		} else if i == len(countryList)-1 {
+			corr = true
+			return corr
+		}
+	}
+
+	emailList := GetEmailProvidersList()
+
+	for i := 0; i < len(emailList); i++ {
+		if s[1] == emailList[i] {
+			break
+		} else if i == len(emailList)-1 {
+			corr = true
+			return corr
+		}
+	}
+
+	deliveryTime, err := strconv.Atoi(s[2])
+	if err != nil || deliveryTime < 0 {
 		corr = true
 		return corr
 	}
