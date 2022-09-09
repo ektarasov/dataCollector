@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"encoding/csv"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -20,17 +21,17 @@ func SmsCollect() []SmsData {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	var smsTemp []SmsData
 	file, err := os.Open(curUser.HomeDir + "\\GolandProjects\\simulator\\sms.data")
-
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Не удалось получить данные")
+		return smsTemp
 	}
 
 	defer file.Close()
 	reader := csv.NewReader(file)
 	reader.Comma = ';'
-	var smsTemp []SmsData
+
 	for {
 		row, err := reader.Read()
 		if err != nil {

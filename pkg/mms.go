@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -23,7 +24,7 @@ func MmsCollect() []MMSData {
 
 	resp, err := http.Get("http://127.0.0.1:8383/mms")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Не удалось получить данные")
 		return mmsTemp
 	}
 

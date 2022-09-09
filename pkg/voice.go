@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"encoding/csv"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -25,18 +26,18 @@ func VoiceCollect() []VoiceCallData {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	var voiceTemp []VoiceCallData
 	file, err := os.Open(curUser.HomeDir + "\\GolandProjects\\simulator\\voice.data")
 
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Не удалось получить данные")
+		return voiceTemp
 	}
 
 	defer file.Close()
 	reader := csv.NewReader(file)
 	reader.Comma = ';'
 
-	var voiceTemp []VoiceCallData
 	for {
 		row, err := reader.Read()
 		if err != nil {
