@@ -1,7 +1,6 @@
-package main
+package pkg
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os/user"
@@ -17,7 +16,7 @@ type BillingData struct {
 	CheckoutPage   bool
 }
 
-func main() {
+func BillingCollect() []BillingData {
 
 	var billingTemp []BillingData
 	curUser, err := user.Current()
@@ -56,8 +55,5 @@ func main() {
 		str = str[6:]
 	}
 
-	for i := 0; i < len(billingTemp); i++ {
-		fmt.Println(billingTemp[i])
-	}
-
+	return billingTemp
 }

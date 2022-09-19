@@ -30,9 +30,15 @@ func main() {
 
 	var emailMap []pkg.EmailData
 	emailMap = pkg.EmailCollect()
-	fmt.Println("email Данные")
+	fmt.Println("email данные")
 	for i := 0; i < len(emailMap); i++ {
 		fmt.Println(emailMap[i])
 	}
 
+	var billingMap []pkg.BillingData
+	billingMap = pkg.BillingCollect()
+	fmt.Println("Billing данные")
+	for i := 0; i < len(billingMap); i++ {
+		fmt.Println(billingMap[i])
+	}
 }
