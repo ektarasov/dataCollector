@@ -56,5 +56,5 @@ func main() {
 		fmt.Println(incidentMap[i])
 	}
 
-	//pkg.ListenAndServeHTTP()
+	pkg.ListenAndServeHTTP()
 }
