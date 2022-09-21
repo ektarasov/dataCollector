@@ -55,4 +55,6 @@ func main() {
 	for i := 0; i < len(incidentMap); i++ {
 		fmt.Println(incidentMap[i])
 	}
+
+	//pkg.ListenAndServeHTTP()
 }

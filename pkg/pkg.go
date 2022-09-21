@@ -1,6 +1,8 @@
 package pkg
 
 import (
+	"github.com/gorilla/mux"
+	"net/http"
 	"strconv"
 )
 
@@ -158,4 +160,14 @@ func CheckEmailForCorrupt(s []string) bool {
 	}
 
 	return corr
+}
+
+func handleConnections(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("OK"))
+}
+
+func ListenAndServeHTTP() {
+	router := mux.NewRouter()
+	router.HandleFunc("/", handleConnections)
+	http.ListenAndServe("127.0.0.1:8282", router)
 }
