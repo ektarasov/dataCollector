@@ -41,4 +41,11 @@ func main() {
 	for i := 0; i < len(billingMap); i++ {
 		fmt.Println(billingMap[i])
 	}
+
+	var supportMap []pkg.SupportData
+	supportMap = pkg.SupportCollect()
+	fmt.Println("Support данные")
+	for i := 0; i < len(supportMap); i++ {
+		fmt.Println(supportMap[i])
+	}
 }
