@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
@@ -164,7 +165,30 @@ func CheckEmailForCorrupt(s []string) bool {
 }
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
+
+	var resultSet ResultSetT
+	var Result ResultT
+
+	resultSet = GetResultData()
+	//resultSet.MMS = nil
+
+	if resultSet.SMS == nil || resultSet.MMS == nil || resultSet.Email == nil || resultSet.Support[0] == 0 || resultSet.Incident == nil || resultSet.Billing == nil || resultSet.VoiceCall == nil {
+
+		Result.Status = false
+		Result.Error = "Error on collect data"
+
+	} else {
+		Result.Data = resultSet
+		Result.Status = true
+	}
+
+	jsonResult, err := json.Marshal(Result)
+
+	if err != nil {
+		w.Write([]byte("Ошибка получения данных"))
+	}
+
+	w.Write(jsonResult)
 }
 
 func ListenAndServeHTTP() {
