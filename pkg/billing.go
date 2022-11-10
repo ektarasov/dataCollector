@@ -1,9 +1,11 @@
 package pkg
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os/user"
+	"path/filepath"
 	"strconv"
 )
 
@@ -23,9 +25,10 @@ func BillingCollect() []BillingData {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fContent, err := ioutil.ReadFile(curUser.HomeDir + "\\GolandProjects\\simulator\\billing.data")
+	fContent, err := ioutil.ReadFile(filepath.Join(curUser.HomeDir, "GolandProjects", "simulator", "billing.data"))
 	if err != nil {
-		panic(err)
+		fmt.Println("Не удалось получить данные")
+		return billingTemp
 	}
 	str := string(fContent)
 

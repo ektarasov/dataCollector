@@ -2,10 +2,14 @@ package pkg
 
 import (
 	"encoding/json"
+	"flag"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
 )
+
+var dstServerAddress = flag.String("dstServerAddress", "", "Сетевой адрес HTTP DST")
+var srcServerAddress = flag.String("srcServerAddress", "127.0.0.1:8282", "Сетевой адрес HTTP SRC")
 
 func getCountriesList() []string {
 	return []string{"RU", "US", "GB", "FR", "BL", "AT", "BG", "DK", "CA", "ES", "CH", "TR", "PE", "NZ", "MC"}
@@ -192,7 +196,9 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListenAndServeHTTP() {
+
 	router := mux.NewRouter()
 	router.HandleFunc("/", handleConnections)
-	http.ListenAndServe("127.0.0.1:8282", router)
+	http.ListenAndServe(*srcServerAddress, router)
+
 }

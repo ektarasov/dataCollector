@@ -61,7 +61,7 @@ func mapRenameCountry() map[string]string {
 func smsResult() [][]SmsData {
 	var smsSortByCountry []SmsData
 	smsSortByCountry = SmsCollect()
-	smsTemp := make([][]SmsData, 2)
+	var smsTemp [][]SmsData
 
 	if smsSortByCountry == nil {
 		return smsTemp
@@ -101,7 +101,7 @@ func smsResult() [][]SmsData {
 		}
 		smsSortByCountry[i], smsSortByCountry[min] = smsSortByCountry[min], smsSortByCountry[i]
 	}
-
+	smsTemp = make([][]SmsData, 2)
 	for i := range smsTemp {
 		smsTemp[i] = make([]SmsData, len(smsSortByCountry))
 	}
@@ -121,7 +121,7 @@ func smsResult() [][]SmsData {
 func mmsResult() [][]MMSData {
 	var mmsSortByCountry []MMSData
 	mmsSortByCountry = MmsCollect()
-	mmsTemp := make([][]MMSData, 2)
+	var mmsTemp [][]MMSData
 
 	if mmsSortByCountry == nil {
 		return mmsTemp
@@ -161,6 +161,7 @@ func mmsResult() [][]MMSData {
 		mmsSortByCountry[i], mmsSortByCountry[min] = mmsSortByCountry[min], mmsSortByCountry[i]
 	}
 
+	mmsTemp = make([][]MMSData, 2)
 	for i := range mmsTemp {
 		mmsTemp[i] = make([]MMSData, len(mmsSortByCountry))
 	}
@@ -181,12 +182,13 @@ func mailResult() map[string][][]EmailData {
 
 	var emailTemp []EmailData
 	emailTemp = EmailCollect()
-	emailResult := make(map[string][][]EmailData, 3)
+	var emailResult map[string][][]EmailData
 
 	if emailTemp == nil {
 		return emailResult
 	}
 
+	emailResult = make(map[string][][]EmailData, 3)
 	for i := 0; i < len(emailTemp); i++ {
 		min := i
 		for j := i; j < len(emailTemp); j++ {

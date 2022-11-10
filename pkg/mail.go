@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"path/filepath"
 	"strconv"
 )
 
@@ -23,7 +24,7 @@ func EmailCollect() []EmailData {
 		log.Fatal(err)
 	}
 	var emailTemp []EmailData
-	file, err := os.Open(curUser.HomeDir + "\\GolandProjects\\simulator\\email.data")
+	file, err := os.Open(filepath.Join(curUser.HomeDir, "GolandProjects", "simulator", "email.data"))
 
 	if err != nil {
 		fmt.Println("Не удалось получить данные")
@@ -40,7 +41,6 @@ func EmailCollect() []EmailData {
 			if err == io.EOF {
 				break
 			}
-			//log.Println("Cannot read line:", err)
 			continue
 		}
 		if len(row) != 3 {

@@ -14,9 +14,9 @@ type SupportData struct {
 }
 
 func SupportCollect() []SupportData {
-
 	var supportTemp []SupportData
-	resp, err := http.Get("http://127.0.0.1:8383/support")
+
+	resp, err := http.Get(*dstServerAddress + "/support")
 	if err != nil {
 		fmt.Println("Не удалось получить данные")
 		return supportTemp

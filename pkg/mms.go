@@ -16,12 +16,11 @@ type MMSData struct {
 }
 
 func MmsCollect() []MMSData {
-
 	var mmsTemp []MMSData
 
-	resp, err := http.Get("http://127.0.0.1:8383/mms")
+	resp, err := http.Get(*dstServerAddress + "/mms")
 	if err != nil {
-		fmt.Println("Не удалось получить данные")
+		fmt.Println("Не удалось получить данные ММС", err)
 		return mmsTemp
 	}
 

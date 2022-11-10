@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"path/filepath"
 )
 
 type SmsData struct {
@@ -22,7 +23,7 @@ func SmsCollect() []SmsData {
 		log.Fatal(err)
 	}
 	var smsTemp []SmsData
-	file, err := os.Open(curUser.HomeDir + "\\GolandProjects\\simulator\\sms.data")
+	file, err := os.Open(filepath.Join(curUser.HomeDir, "GolandProjects", "simulator", "sms.data"))
 	if err != nil {
 		fmt.Println("Не удалось получить данные")
 		return smsTemp

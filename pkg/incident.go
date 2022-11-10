@@ -15,7 +15,8 @@ type IncidentData struct {
 
 func IncidentCollect() []IncidentData {
 	var incidentTemp []IncidentData
-	resp, err := http.Get("http://127.0.0.1:8383/accendent")
+
+	resp, err := http.Get(*dstServerAddress + "/accendent")
 	if err != nil {
 		fmt.Println("Не удалось получить данные")
 		return incidentTemp

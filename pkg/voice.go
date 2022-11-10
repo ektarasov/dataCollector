@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"path/filepath"
 	"strconv"
 )
 
@@ -27,7 +28,7 @@ func VoiceCollect() []VoiceCallData {
 		log.Fatal(err)
 	}
 	var voiceTemp []VoiceCallData
-	file, err := os.Open(curUser.HomeDir + "\\GolandProjects\\simulator\\voice.data")
+	file, err := os.Open(filepath.Join(curUser.HomeDir, "GolandProjects", "simulator", "voice.data"))
 
 	if err != nil {
 		fmt.Println("Не удалось получить данные")
