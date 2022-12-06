@@ -6,8 +6,6 @@ import (
 )
 
 func main() {
-
 	flag.Parse()
 	pkg.ListenAndServeHTTP()
-
 }

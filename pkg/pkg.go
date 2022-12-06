@@ -9,7 +9,7 @@ import (
 )
 
 var dstServerAddress = flag.String("dstServerAddress", "", "Сетевой адрес HTTP DST")
-var srcServerAddress = flag.String("srcServerAddress", "127.0.0.1:8282", "Сетевой адрес HTTP SRC")
+var srcServerAddress = flag.String("srcServerAddress", "", "Сетевой адрес HTTP SRC")
 
 func getCountriesList() []string {
 	return []string{"RU", "US", "GB", "FR", "BL", "AT", "BG", "DK", "CA", "ES", "CH", "TR", "PE", "NZ", "MC"}
@@ -176,7 +176,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	resultSet = GetResultData()
 	//resultSet.MMS = nil
 
-	if resultSet.SMS == nil || resultSet.MMS == nil || resultSet.Email == nil || resultSet.Support[0] == 0 || resultSet.Incident == nil || resultSet.Billing == nil || resultSet.VoiceCall == nil {
+	if resultSet.SMS == nil || resultSet.MMS == nil || resultSet.Email == nil || resultSet.Support[0] == 0 || resultSet.Incident == nil || resultSet.Billing.Err == true || resultSet.VoiceCall == nil {
 
 		Result.Status = false
 		Result.Error = "Error on collect data"
