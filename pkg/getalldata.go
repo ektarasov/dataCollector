@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"sort"
 )
 
 type ResultSetT struct {
@@ -81,25 +82,14 @@ func smsResult() [][]SmsData {
 	smsSortByProvider := make([]SmsData, len(smsSortByCountry))
 	copy(smsSortByProvider, smsSortByCountry)
 
-	for i := 0; i < len(smsSortByProvider); i++ {
-		min := i
-		for j := i; j < len(smsSortByProvider); j++ {
-			if smsSortByProvider[min].Provider > smsSortByProvider[j].Provider {
-				min = j
-			}
-		}
-		smsSortByProvider[i], smsSortByProvider[min] = smsSortByProvider[min], smsSortByProvider[i]
-	}
+	sort.Slice(smsSortByProvider, func(i, j int) bool {
+		return smsSortByProvider[i].Provider < smsSortByProvider[j].Provider
+	})
 
-	for i := range smsSortByCountry {
-		min := i
-		for j := i; j < len(smsSortByCountry); j++ {
-			if smsSortByCountry[min].Country > smsSortByCountry[j].Country {
-				min = j
-			}
-		}
-		smsSortByCountry[i], smsSortByCountry[min] = smsSortByCountry[min], smsSortByCountry[i]
-	}
+	sort.Slice(smsSortByCountry, func(i, j int) bool {
+		return smsSortByCountry[i].Country < smsSortByCountry[j].Country
+	})
+
 	smsTemp = make([][]SmsData, 2)
 	for i := range smsTemp {
 		smsTemp[i] = make([]SmsData, len(smsSortByCountry))
@@ -140,25 +130,13 @@ func mmsResult() [][]MMSData {
 	mmsSortByProvider := make([]MMSData, len(mmsSortByCountry))
 	copy(mmsSortByProvider, mmsSortByCountry)
 
-	for i := 0; i < len(mmsSortByProvider); i++ {
-		min := i
-		for j := i; j < len(mmsSortByProvider); j++ {
-			if mmsSortByProvider[min].Provider > mmsSortByProvider[j].Provider {
-				min = j
-			}
-		}
-		mmsSortByProvider[i], mmsSortByProvider[min] = mmsSortByProvider[min], mmsSortByProvider[i]
-	}
+	sort.Slice(mmsSortByProvider, func(i, j int) bool {
+		return mmsSortByProvider[i].Provider < mmsSortByProvider[j].Provider
+	})
 
-	for i := range mmsSortByCountry {
-		min := i
-		for j := i; j < len(mmsSortByCountry); j++ {
-			if mmsSortByCountry[min].Country > mmsSortByCountry[j].Country {
-				min = j
-			}
-		}
-		mmsSortByCountry[i], mmsSortByCountry[min] = mmsSortByCountry[min], mmsSortByCountry[i]
-	}
+	sort.Slice(mmsSortByCountry, func(i, j int) bool {
+		return mmsSortByCountry[i].Country < mmsSortByCountry[j].Country
+	})
 
 	mmsTemp = make([][]MMSData, 2)
 	for i := range mmsTemp {
@@ -182,65 +160,48 @@ func mailResult() map[string][][]EmailData {
 	var emailTemp []EmailData
 	emailTemp = EmailCollect()
 	var emailResult map[string][][]EmailData
+	var mapCountryKey = make(map[string][]EmailData)
+	emailResult = make(map[string][][]EmailData, 3)
 
 	if emailTemp == nil {
 		return emailResult
 	}
 
-	emailResult = make(map[string][][]EmailData, 3)
-	for i := 0; i < len(emailTemp); i++ {
-		min := i
-		for j := i; j < len(emailTemp); j++ {
-			if emailTemp[min].Country > emailTemp[j].Country {
-				min = j
+	sort.Slice(emailTemp, func(i, j int) bool {
+		if emailTemp[i].Country < emailTemp[j].Country {
+			return true
+		}
+		return false
+	})
+
+	sort.SliceStable(emailTemp, func(i, j int) bool {
+		if emailTemp[i].Country == emailTemp[j].Country {
+			if emailTemp[i].DeliveryTime < emailTemp[j].DeliveryTime {
+				return true
 			}
 		}
-		emailTemp[i], emailTemp[min] = emailTemp[min], emailTemp[i]
+		return false
+	})
+
+	for _, v := range emailTemp {
+		mapCountryKey[v.Country] = append(mapCountryKey[v.Country], v)
 	}
 
-	ind := make([]int, 1)
-
-	for i := 0; i < len(emailTemp); i++ {
-		min := i
-		for j := i; j < len(emailTemp); j++ {
-			if emailTemp[i].Country == emailTemp[j].Country {
-				if emailTemp[min].DeliveryTime > emailTemp[j].DeliveryTime {
-					min = j
-				}
-			} else {
-				if ind[len(ind)-1] != j {
-					ind = append(ind, j)
-				}
-				break
-			}
-		}
-		emailTemp[i], emailTemp[min] = emailTemp[min], emailTemp[i]
-	}
-
-	var emailDeliveryTimeBest []EmailData
-	var emailDeliveryTimeWorst []EmailData
-
-	for i := 1; i < len(ind); i++ {
-
-		emailDeliveryTimeBest = append(emailTemp[ind[i-1] : ind[i-1]+3])
-
-		emailDeliveryTimeWorst = append(emailTemp[ind[i]-3 : ind[i]])
-
+	for i, v := range mapCountryKey {
 		emailMid := make([][]EmailData, 2)
 		for l := range emailMid {
 			emailMid[l] = make([]EmailData, 3)
 		}
-
 		for m := range emailMid {
 			for j := range emailMid[m] {
 				if m == 0 {
-					emailMid[m][j] = emailDeliveryTimeBest[j]
+					emailMid[m][j] = v[j]
 				} else {
-					emailMid[m][j] = emailDeliveryTimeWorst[j]
+					emailMid[m][j] = v[len(v)-3+j]
 				}
 			}
 		}
-		emailResult[emailMid[0][0].Country] = emailMid
+		emailResult[i] = emailMid
 	}
 
 	return emailResult

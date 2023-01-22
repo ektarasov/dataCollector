@@ -10,53 +10,70 @@ import (
 
 var dstServerAddress = flag.String("dstServerAddress", "", "Сетевой адрес HTTP DST")
 var srcServerAddress = flag.String("srcServerAddress", "", "Сетевой адрес HTTP SRC")
-
-func getCountriesList() []string {
-	return []string{"RU", "US", "GB", "FR", "BL", "AT", "BG", "DK", "CA", "ES", "CH", "TR", "PE", "NZ", "MC"}
+var mapCountriesList = map[string]bool{
+	"RU": false,
+	"US": false,
+	"GB": false,
+	"FR": false,
+	"BL": false,
+	"AT": false,
+	"BG": false,
+	"DK": false,
+	"CA": false,
+	"ES": false,
+	"CH": false,
+	"TR": false,
+	"PE": false,
+	"NZ": false,
+	"MC": false,
+}
+var mapProvidersList = map[string]bool{
+	"Topolo": false,
+	"Rond":   false,
+	"Kildy":  false,
+}
+var mapVoiceProvidersList = map[string]bool{
+	"TransparentCalls": false,
+	"E-Voice":          false,
+	"JustPhone":        false,
+}
+var mapEmailProvidersList = map[string]bool{
+	"Gmail":      false,
+	"Yahoo":      false,
+	"Hotmail":    false,
+	"MSN":        false,
+	"Orange":     false,
+	"Comcast":    false,
+	"AOL":        false,
+	"Live":       false,
+	"RediffMail": false,
+	"GMX":        false,
+	"Protonmail": false,
+	"Yandex":     false,
+	"Mail.ru":    false,
 }
 
-func getProvidersList() []string {
-	return []string{"Topolo", "Rond", "Kildy"}
-}
-
-func getVoiceProvidersList() []string {
-	return []string{"TransparentCalls", "E-Voice", "JustPhone"}
-}
-
-func getEmailProvidersList() []string {
-	return []string{
-		"Gmail",
-		"Yahoo",
-		"Hotmail",
-		"MSN",
-		"Orange",
-		"Comcast",
-		"AOL",
-		"Live",
-		"RediffMail",
-		"GMX",
-		"Protonmail",
-		"Yandex",
-		"Mail.ru",
-	}
+func mapCheck(s string, m map[string]bool) bool {
+	_, ok := m[s]
+	return !ok
 }
 
 func CheckSmsMmsForCorrupt(s [4]string) bool {
 	corr := false
 
-	if s[0] == "" || s[1] == "" || s[2] == "" || s[3] == "" {
-		corr = true
-		return corr
+	for _, v := range s {
+		if v == "" {
+			corr = true
+			return corr
+		}
 	}
 
-	countriesList := getCountriesList()
-	corr = cycleCheck(s[0], countriesList)
+	corr = mapCheck(s[0], mapCountriesList)
 	if corr == true {
 		return corr
 	}
 
-	providersList := getProvidersList()
-	corr = cycleCheck(s[1], providersList)
+	corr = mapCheck(s[1], mapProvidersList)
 	if corr == true {
 		return corr
 	}
@@ -78,19 +95,19 @@ func CheckSmsMmsForCorrupt(s [4]string) bool {
 func CheckVoiceForCorrupt(s []string) bool {
 	corr := false
 
-	if s[0] == "" || s[1] == "" || s[2] == "" || s[3] == "" || s[4] == "" || s[5] == "" || s[6] == "" || s[7] == "" {
-		corr = true
-		return corr
+	for _, v := range s {
+		if v == "" {
+			corr = true
+			return corr
+		}
 	}
 
-	countriesList := getCountriesList()
-	corr = cycleCheck(s[0], countriesList)
+	corr = mapCheck(s[0], mapCountriesList)
 	if corr == true {
 		return corr
 	}
 
-	providersList := getVoiceProvidersList()
-	corr = cycleCheck(s[3], providersList)
+	corr = mapCheck(s[3], mapVoiceProvidersList)
 	if corr == true {
 		return corr
 	}
@@ -129,32 +146,22 @@ func CheckVoiceForCorrupt(s []string) bool {
 	return corr
 }
 
-func cycleCheck(s string, l []string) bool {
+func CheckEmailForCorrupt(s []string) bool {
 	corr := false
 
-	for i := 0; i < len(l); i++ {
-		if s == l[i] {
-			break
-		} else if i == len(l)-1 {
+	for _, v := range s {
+		if v == "" {
 			corr = true
 			return corr
 		}
 	}
-	return corr
-}
 
-func CheckEmailForCorrupt(s []string) bool {
-	corr := false
-
-	countriesList := getCountriesList()
-
-	corr = cycleCheck(s[0], countriesList)
+	corr = mapCheck(s[0], mapCountriesList)
 	if corr == true {
 		return corr
 	}
 
-	emailList := getEmailProvidersList()
-	corr = cycleCheck(s[1], emailList)
+	corr = mapCheck(s[1], mapEmailProvidersList)
 	if corr == true {
 		return corr
 	}
@@ -174,7 +181,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	var Result ResultT
 
 	resultSet = GetResultData()
-	//resultSet.MMS = nil
 
 	if resultSet.SMS == nil || resultSet.MMS == nil || resultSet.Email == nil || resultSet.Support[0] == 0 || resultSet.Incident == nil || resultSet.Billing.Err == true || resultSet.VoiceCall == nil {
 

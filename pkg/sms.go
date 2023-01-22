@@ -39,12 +39,14 @@ func SmsCollect() []SmsData {
 			if err == io.EOF {
 				break
 			}
-			//	log.Println("Cannot read line:", err)
+			log.Println("Cannot read line:", err)
 			continue
 		}
+
 		if len(row) != 4 {
 			continue
 		}
+
 		var str [4]string
 		str[0] = row[0]
 		str[1] = row[3]
